@@ -12,8 +12,30 @@ const data = [
  * @returns {array}
  */
 function restructureArray(data) {
+  //create dataMap to hold structured items
+  const dataMap = {};
+  
   // Create an array to hold the root elements
   const root = [];
+
+  data.forEach((item) => {
+    dataMap[item.id] = {
+      ...item,
+      children: []
+    }
+  })
+
+  data.forEach((item) => {
+    //find the parent object using the parent item id from the object
+    const parent = dataMap[item.parent]
+    if (parent){
+      //push this item onto the parent's children array
+      parent.children.push(dataMap[item.id])
+    } else{
+      //since there is no dataMap[0] then we'll be null and return false
+      root.push(dataMap[item.id])
+    }
+  })
 
   return root;
 }
