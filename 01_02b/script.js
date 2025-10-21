@@ -12,13 +12,55 @@ const data = [
  * @returns {array}
  */
 function restructureArray(data) {
+  //create dataMap to hold structured items
+  const dataMap = {};
+  
   // Create an array to hold the root elements
   const root = [];
+
+  data.forEach((item) => {
+    dataMap[item.id] = {
+      ...item,
+      children: []
+    }
+  })
+
+  data.forEach((item) => {
+    //find the parent object using the parent item id from the object
+    const parent = dataMap[item.parent]
+    if (parent){
+      //push this item onto the parent's children array
+      parent.children.push(dataMap[item.id])
+    } else{
+      //since there is no dataMap[0] then we'll be null and return false
+      root.push(dataMap[item.id])
+    }
+  })
 
   return root;
 }
 
-const result = restructureArray(data);
+const comments = restructureArray(data);
 
 // Output the resut array as a tree.
-console.log(JSON.stringify(result, null, 2));
+console.log(JSON.stringify(comments, null, 2));
+
+function generateNestedText(comments, level = 0){
+  let output = "";
+
+  comments.forEach((comment) => {
+      let indent = "-".repeat(level + 1);
+
+      output += indent + comment.text + "\n";
+
+      if (comment.children && comment.children.length > 0){
+          output += generateNestedText(comment.children, level + 1);
+      }
+  })
+
+  return output;
+}
+
+const result = generateNestedText(comments);
+
+console.log(result);
