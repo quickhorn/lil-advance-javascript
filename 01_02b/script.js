@@ -40,7 +40,27 @@ function restructureArray(data) {
   return root;
 }
 
-const result = restructureArray(data);
+const comments = restructureArray(data);
 
 // Output the resut array as a tree.
-console.log(JSON.stringify(result, null, 2));
+console.log(JSON.stringify(comments, null, 2));
+
+function generateNestedText(comments, level = 0){
+  let output = "";
+
+  comments.forEach((comment) => {
+      let indent = "-".repeat(level + 1);
+
+      output += indent + comment.text + "\n";
+
+      if (comment.children && comment.children.length > 0){
+          output += generateNestedText(comment.children, level + 1);
+      }
+  })
+
+  return output;
+}
+
+const result = generateNestedText(comments);
+
+console.log(result);
