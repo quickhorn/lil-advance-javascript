@@ -1,4 +1,4 @@
-import { Library } from "./library.js";
+import { Library, Fiction, NonFiction } from "./library.js";
 
 // This is how your code will be called.
 // Your answer should be the largest value in the numbers array.
