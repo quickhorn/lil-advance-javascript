@@ -1,5 +1,4 @@
-// JavaScript code​​​​​​‌‌‌​​‌‌‌​‌​​​‌​‌​​​‌‌‌​​​ below
-// Write your answer here, and then test your code.
+
 
 // Change these boolean values to control whether you see
 // the expected answer and/or hints.
@@ -8,6 +7,26 @@ const showHints = false;
 
 // Logger class
 class Logger {
+    constructor(){
+        if (Logger.instance){
+            return Logger.instance;
+        }
+        Logger.instance = this;
+        this.logs = [];
+        
+        Object.freeze();
+        this.logCount = 0;
+    }
+
+    log(entry, message2){
+        //console.log(entry);
+        this.logs.push(`${entry} - ${message2}`);
+        this.logCount = this.logCount + 1;
+    }
+
+    showLog(){
+        console.log(this);
+    }
   // Your code begins here.
 
   // Your code ends here.
@@ -16,10 +35,39 @@ class Logger {
 const loggerInstance = new Logger();
 
 // Proxy handler object to intercept the behavior of the logger instance
+// const handler = {
+//   // Your code begins here.
+//     apply: function (target, thisArg, argumentsList){
+//         console.log(target);
+//         console.log(thisArg);
+            
+//         // if (target === "log"){
+//         //     thisArg.logs.push(`${Date.now()} - ${argumentsList[0]}`);
+//         // }
+//         return true;
+//     },
+//     // set: function (obj, prop, value){
+//     //     console.log(obj);
+//     //     console.log
+//     //     if (prop === "log") {
+//     //         obj.logs.push(`${Date.now()} - ${value}`)
+//     //     }
+//     //     return true;
+//     //      }
+// };
 const handler = {
-  // Your code begins here.
+  get: function (target, prop) {
+    if (prop === "log") {
+      return function (message, message2) {
+        const timestamp = new Date();
+        return target[prop](`${timestamp} - ${message}`, message2);
+      };
+    } else if (prop === "showLog") {
+      return target[prop].bind(target);
+    } else {
+      return target[prop];
+    }
+  },
+};
 
-  // Your code ends here.
-}
-
-const logger = new Proxy(loggerInstance, handler);
+export const logger = new Proxy(loggerInstance, handler);
