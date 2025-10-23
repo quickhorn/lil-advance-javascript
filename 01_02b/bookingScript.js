@@ -3,20 +3,34 @@ class Booking {
     this._time = null;
   }
 
-  set time(value) {
-    let bookingHour = new Date(value).getHours();
-    if (bookingHour < 9 || bookingHour > 16) {
-      throw new Error("Bookings can only be made between 9AM and 4PM");
-    }
-    this._time = new Date(value);
-  }
-
   get time() {
     return this._time;
   }
 }
 
-let booking = new Booking();
+class Scheduler {
+  constructor() {
+    this._time = null;
+  }
+}
+
+let validator = {
+  set: function (obj, prop, value){
+    if (prop === "_time") {
+      let bookingHour = new Date(value).getHours();
+      if (bookingHour < 9 || bookingHour > 16) {
+        throw new Error("Bookings can only be made between 9AM and 4PM");
+      }
+    }
+    //if we pass validation, we set the prop of the object.
+    obj[prop] = new Date(value);
+
+    return true;
+  }
+}
+
+//let booking = new Booking();
+let booking = new Proxy(new Booking(), validator);
 
 let bookingAttempts = [
   new Date("2023-05-24T10:00:00"),
@@ -26,9 +40,16 @@ let bookingAttempts = [
 
 for (let attempt of bookingAttempts) {
   try {
-    booking.time = attempt;
+    booking._time = attempt;
     console.log(`Booking made successfully at ${booking._time}`);
   } catch (error) {
     console.log(`Booking attempt failed for ${attempt}: ${error.message}`);
   }
 }
+
+let appointment = new Proxy(new Scheduler(), validator);
+
+appointment._time = new Date("2023-05-24T10:00:00");
+console.log(`Appointment made successfully at ${appointment._time}`);
+appointment._time = new Date("2023-05-24T08:00:00");
+console.log(`Appointment made successfully at ${appointment._time}`);
