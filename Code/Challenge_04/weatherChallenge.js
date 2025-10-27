@@ -18,23 +18,33 @@ class WeatherStation {
   //why set the displayName as well as the display when the displayName is part of the display.
   addObserver(display, displayName){
     if (display && display instanceof WeatherDisplay){
-        this.observers.add(display.boundUpdate);
-        this.displayNames.set(displayName,display.boundUpdate);
-        return `Weather Station: ${displayName} subscribed to the weather station.`;
+        if (!this.observers.has(display.boundUpdate) || !this.displayNames.has(display.boundUpdate)){
+            this.observers.add(display.boundUpdate);
+            this.displayNames.set(display.boundUpdate, displayName);
+            return `Weather Station: ${displayName} subscribed to the weather station.`;
+        } else{
+            console.log(`${display} cannot be added as it exists  already`);
+        }
     } else{
         console.log(`${display} isn't a valid display object`)
+        return false;
     }
   }
 
   removeObserver(display){
     if (display && display instanceof WeatherDisplay){
-        const obsDelete = this.observers.delete(display.boundUpdate);
-        const dnDelete = this.displayNames.delete(display.displayName);
-        if(obsDelete && dnDelete){
-            return `Weather Station: ${display.displayName} unsubscribed from the weather station.`;
+        if (this.observers.has(display.boundUpdate) || this.displayNames.get(display.boundUpdate)){
+            const obsDelete = this.observers.delete(display.boundUpdate);
+            const dnDelete = this.displayNames.delete(display.boundUpdate);
+            if(obsDelete && dnDelete){
+                return `Weather Station: ${display.displayName} unsubscribed from the weather station.`;
+            } else {
+                return `Unable to remove display ${display.displayName}`
+            }
         } else {
-            return `Unable to remove display ${display.displayName}`
+            console.log(`${display} cannot be removed as it doesn't exist`);
         }
+
 
     } else {
         console.log(`${display} isn't a valid display object`)
@@ -43,10 +53,15 @@ class WeatherStation {
 
   notifyObservers(){
     //note I just use the displayNames map, and not the observer set. Not sure what the intention was
-    const names = this.displayNames.keys();
-    for (const dn of names){
-        this.displayNames.get(dn)(this.temperature,dn);
-    };
+    // const names = this.displayNames.keys();
+    // for (const dn of names){
+    //     this.displayNames.get(dn)(this.temperature,dn);
+    // };
+
+    //in this solution we iterate over the set instead
+    for (const o of this.observers){
+        o(this.temperature,this.displayNames.get(o));
+    }
   }
 
   // Your code ends here.
