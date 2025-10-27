@@ -2,10 +2,6 @@
 // Write your answer here, and then test your code.
 // Your job is to implement the findLargest() method.
 
-// Change these boolean values to control whether you see
-// the expected answer and/or hints.
-const showExpectedResult = false;
-const showHints = false;
 
 let reports = [];
 
@@ -32,20 +28,57 @@ class Observable {
 
 // Your code starts here.
 class Stock extends Observable {
-    constructor(stockName,stockPrice){
+    constructor(stockName, stockPrice){
+        super();
         this.stockName = stockName;
         this.stockPrice = stockPrice;
+    }
+
+    updatePrice(price){
+        if (Number.isFinite(price)){
+            this.stockPrice = price;
+            this.notify(this);
+        } else{
+            reports.push(`Error: Invalid price data '${price}' for ${this.stockName}. Price must be a number.`)
+        }
     }
 }
 
 class PriceDisplay{
-
+    update(data){
+        reports.push(`Price Display: ${data.stockName} stock price is now $${data.stockPrice}`);  
+    }
 }
 
 class PriceThresholdNotifier{
+    constructor(thresholdPrice){
+        this.thresholdPrice = thresholdPrice;
+    }
 
+    update(data){
+        if (data.stockPrice >= this.thresholdPrice){
+            //if we have already set a price, let's check it
+            reports.push(`Price Threshold Notifier: ${data.stockName} stock price has reached the threshold of $${this.thresholdPrice}`);
+        }
+    }
 }
 
 class PercentageChangeNotifier{
+    constructor(percentageThreshold){
+        this.currentPrice = null;
+        this.percentageThreshold = percentageThreshold;
+    }
 
+    update(data){
+        if (this.currentPrice){
+            //do the percentage comparison
+            const changePercentage = (data.stockPrice - this.currentPrice) / this.currentPrice * 100;
+            if (Math.abs(changePercentage) > this.percentageThreshold){
+                reports.push(`Percentage Change Notifier: ${data.stockName} stock price has changed by ${changePercentage.toFixed(2)}%`);
+            }
+        }  
+        this.currentPrice = data.stockPrice;
+    }
 }
+
+export { Stock, PriceDisplay, PriceThresholdNotifier, PercentageChangeNotifier, reports}
