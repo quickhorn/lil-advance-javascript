@@ -34,8 +34,6 @@ class Product {
         
         (c) => c !== customer.boundMessage
     );
-    console.log(this.observers);
-    console.log(`Removed ${customer.name} as an observer`);
   }
 }
 
