@@ -35,6 +35,13 @@ class TemperatureMonitor extends ReactiveObject {
   }
 }
 
+class CoolingSystem extends ReactiveObject {
+    constructor() {
+        super();
+        this.status = "OFF";
+    }
+}
+
 // Now we can use this reactive object:
 const monitor = new TemperatureMonitor();
 
