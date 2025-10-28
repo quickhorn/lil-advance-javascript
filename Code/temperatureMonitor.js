@@ -40,10 +40,21 @@ class CoolingSystem extends ReactiveObject {
         super();
         this.status = "OFF";
     }
+
+    triggerCoolingSystem(monitor){
+        if (monitor.temperature > 30){
+            this.status = "ON";
+            console.log(`Cooling system activated. Current status ${this.status}`)
+        } else {
+            this.status = "OFF";
+            console.log(`Cooling system deactivated. Current status ${this.status}`)
+        }
+    }
 }
 
 // Now we can use this reactive object:
 const monitor = new TemperatureMonitor();
+const coolingSysgtem = new CoolingSystem();
 
 // Define a callback for temperature changes
 const alertTemperature = (m) => {
@@ -58,6 +69,7 @@ const alertTemperature = (m) => {
 
 // Subscribe to changes
 monitor.subscribe(alertTemperature);
+monitor.subscribe(coolingSysgtem.triggerCoolingSystem.bind(coolingSysgtem));
 
 // Set a new temperature
 monitor.setTemperature(35); // Logs: 'WARNING: Temperature too high!'
