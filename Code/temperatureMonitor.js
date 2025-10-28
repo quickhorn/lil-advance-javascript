@@ -44,6 +44,8 @@ const alertTemperature = (m) => {
     console.log(
       `WARNING: It's ${m.temperature}°C. It's uncomfortably hot!`
     );
+  } else{
+    console.log(`It's a nice ${m.temperature}°C!`)
   }
 };
 
@@ -52,6 +54,8 @@ monitor.subscribe(alertTemperature);
 
 // Set a new temperature
 monitor.setTemperature(35); // Logs: 'WARNING: Temperature too high!'
+monitor.setTemperature(32);
+monitor.setTemperature(29);
 
 // Unsubscribe from changes
 monitor.unsubscribe(alertTemperature);
