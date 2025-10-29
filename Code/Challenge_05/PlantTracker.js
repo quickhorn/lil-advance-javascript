@@ -14,7 +14,7 @@ class Plant{
         let expectedFruitingDate = new Date(this.sowingDate);
         expectedFruitingDate.setDate(expectedFruitingDate.getDate() + this.estimatedFruitingTime);
         let actualFruitingDate = new Date(actualFruitingTime);
-        this.difference =  actualFruitingDate.getDate() - expectedFruitingDate.getDate();
+        this.difference =  parseInt((actualFruitingDate - expectedFruitingDate) / (1000 * 3600 * 24));
         // console.log(`SowingDate ${sowingDateAsDate}. Expected Fruiting Date ${expectedFruitingDate}. Actual Fruiting Date ${actualFruitingDate}. Difference ${this.difference}`);
     }
 }
