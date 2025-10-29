@@ -10,14 +10,13 @@ class Plant{
     }
 
     recordActualFruitingTime(actualFruitingTime){
-        let sowingDateAsDate = new Date(this.sowingDate);
-        let expectedFruitingDate = new Date(sowingDateAsDate.getDate() + this.estimatedFruitingTime);
+        this.actualFruitingTime = actualFruitingTime;
+        let expectedFruitingDate = new Date(this.sowingDate);
+        expectedFruitingDate.setDate(expectedFruitingDate.getDate() + this.estimatedFruitingTime);
         let actualFruitingDate = new Date(actualFruitingTime);
-        let difference = actualFruitingDate.getDate() - expectedFruitingDate.getDate();
-        console.log(`SowingDate ${sowingDateAsDate}. Expected Fruiting Date ${expectedFruitingDate}. Actual Fruiting Date ${actualFruitingDate}. Difference ${difference}`);
+        this.difference =  actualFruitingDate.getDate() - expectedFruitingDate.getDate();
+        // console.log(`SowingDate ${sowingDateAsDate}. Expected Fruiting Date ${expectedFruitingDate}. Actual Fruiting Date ${actualFruitingDate}. Difference ${this.difference}`);
     }
-
-    #expectedFruitingDate = new Date(new Date(this.sowingDate).getDate + this.estimatedFruitingTime);
 }
 
 class PlantTracker extends ReactiveObject{
@@ -32,15 +31,14 @@ class PlantTracker extends ReactiveObject{
     }
 
     recordActualFruitingTime(plantIndex, actualFruitingTime){
-        let plant = plants[plantIndex];
+        let plant = this.plants[plantIndex];
         plant.recordActualFruitingTime(actualFruitingTime);
         this.updateSubscribers();
     }
 
 }
 
-const plant = new Plant("Eggplant", "2023-05-01", 80);
-console.log(plant);
-
 //the tracker that subscribers will use
 const plantTracker = new PlantTracker();
+
+export {plantTracker}

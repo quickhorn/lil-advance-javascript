@@ -3,6 +3,14 @@ import { plantTracker } from "./PlantTracker.js"
 // This is how your code will be called.
 // You can edit plantArray to try different testing cases.
 
+//let's make our own subscriber to test even though it's not part of the challenge
+const plantNotifier = (plantTracker) => {
+    console.log(`PlantTracker Update:`);
+    console.log(plantTracker.plants)
+};
+
+plantTracker.subscribe(plantNotifier);
+
 const plantArray = [
     {
       name: "Tomato",
@@ -43,3 +51,5 @@ const plantArray = [
   });
   
   const result = plantTracker.plants;
+
+  console.log(result);
